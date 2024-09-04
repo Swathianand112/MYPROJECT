@@ -1,0 +1,10 @@
+﻿link_alias,link_description,link_location,base_url
+Homepage,Main entry page,Header,https://example.com
+About Us,Information page,Footer,https://example.com/about
+Contact,Contact page,Sidebar,https://example.com/contact
+Blog,Blog page,Header,https://example.com/blog
+Example Link,This is an example link,,https://www.example.com/
+,,,
+,,,
+FB,Footer_FB,Footer,https://www.facebook.com/BlockAdvisors
+Header_BALogo,Header_BALogo,footer,https://www.blockadvisors.com
