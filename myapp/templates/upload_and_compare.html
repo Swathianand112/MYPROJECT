@@ -10,11 +10,11 @@
             font-family: Arial, sans-serif;
             margin: 0;
             padding: 0;
-            background-color: #e9ecef; /* Light gray background for the entire page */
+            background-color: #e9ecef;
             color: #212529;
         }
         header {
-            background-color: #343a40; /* Dark background for header */
+            background-color: #343a40;
             color: white;
             padding: 15px 0;
             text-align: center;
@@ -23,7 +23,7 @@
             width: 80%;
             margin: 20px auto;
             padding: 20px;
-            background-color: #ffffff; /* White background for the container */
+            background-color: #ffffff;
             border-radius: 8px;
             box-shadow: 0 4px 8px rgba(0,0,0,0.1);
         }
@@ -46,7 +46,7 @@
             width: 100%;
         }
         button {
-            background-color: #007bff; /* Bootstrap blue button */
+            background-color: #007bff;
             color: white;
             border: none;
             padding: 10px 20px;
@@ -56,13 +56,13 @@
             transition: background-color 0.3s;
         }
         button:hover {
-            background-color: #0056b3; /* Darker blue on hover */
+            background-color: #0056b3;
         }
         table {
             width: 100%;
             border-collapse: collapse;
             margin-top: 20px;
-            background-color: #f8f9fa; /* Light gray background for table */
+            background-color: #f8f9fa;
         }
         table, th, td {
             border: 1px solid #dee2e6;
@@ -72,11 +72,11 @@
             text-align: left;
         }
         th {
-            background-color: #343a40; /* Dark background for header */
+            background-color: #343a40;
             color: #ffffff;
         }
         td {
-            background-color: #ffffff; /* White background for rows */
+            background-color: #ffffff;
             color: #212529;
         }
         .icon {
@@ -84,20 +84,25 @@
             margin-right: 5px;
         }
         .icon-green {
-            color: #28a745; /* Bootstrap green */
+            color: #28a745;
         }
         .icon-red {
-            color: #dc3545; /* Bootstrap red */
+            color: #dc3545;
         }
         .content-img {
             max-width: 100px;
             height: auto;
         }
-        .highlight-red {
-            color: #dc3545; /* Bootstrap red */
+        td.url-cell {
+            width: 70%; /* URL takes 70% of the table width */
+            word-wrap: break-word; /* Breaks long URLs into multiple lines */
         }
-        .highlight-yellow {
-            color: #ffc107; /* Bootstrap yellow */
+        td.content-cell {
+            width: 15%; /* Content takes 15% of the table width */
+        }
+        td.title-cell {
+            width: 15%; /* Title Match takes 15% of the table width */
+            text-align: center; /* Center the icons */
         }
     </style>
 </head>
@@ -139,15 +144,15 @@
                 <tbody>
                     {% for result in results %}
                     <tr>
-                        <td>{{ result.content|safe }}</td>
-                        <td>
+                        <td class="content-cell">{{ result.content|safe }}</td>
+                        <td class="title-cell">
                             {% if result.title_match_icon == 'check' %}
                                 <i class="fas fa-check icon icon-green"></i>
                             {% elif result.title_match_icon == 'times' %}
                                 <i class="fas fa-times icon icon-red"></i>
                             {% endif %}
                         </td>
-                        <td>{{ result.final_url|safe }}</td>
+                        <td class="url-cell">{{ result.final_url|safe }}</td>
                     </tr>
                     {% endfor %}
                 </tbody>

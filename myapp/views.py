@@ -56,17 +56,17 @@ def upload_and_compare(request):
                 for _, row in crf_data.iterrows():
                     target_id = row.get('Target_id', '')
                     final_url = row.get('Final_URL', '')
-                    crf_title = row.get('Title', '').strip().lower()
-                    crf_utm_params = row.get('UTM_Parameters', '')  # UTM parameters column
+                    crf_title = row.get('Title', '').strip().lower() if 'Title' in row else '' 
+                    crf_utm_params = row.get('UTM_Parameters', '') 
                     email_info = email_urls.get(target_id, {})
                     email_url = email_info.get('url', '')
                     email_title = email_info.get('title', '')
                     email_content = email_contents.get(target_id, '')
                     final_url_target_blank = email_info.get('target_blank', False)
-                    title_match_icon = 'times'  # Default to wrong icon
+                    title_match_icon = 'times' 
 
-                    if crf_title == email_title:
-                        title_match_icon = 'check'  # Match found
+                    if crf_title and crf_title == email_title:
+                        title_match_icon = 'check' 
 
                     if email_url:
                         try:
@@ -84,8 +84,8 @@ def upload_and_compare(request):
                             root_final_url = f'{parsed_final_url.scheme}://{parsed_final_url.netloc}'
                             root_redirected_url = f'{parsed_redirected_url.scheme}://{parsed_redirected_url.netloc}'
 
-                            # Build colored URL
-                            colored_url = f'<span style="color:{"green" if root_final_url == root_redirected_url else "red"};">{root_final_url}</span>'
+                            
+                            colored_url = f'<span style="color:{"green" if root_final_url == root_redirected_url else "red"};">{root_redirected_url}</span>'
 
                             # Extract and Compare UTM Parameters
                             crf_query_params = parse_qs(parsed_final_url.query)
@@ -96,17 +96,16 @@ def upload_and_compare(request):
 
                             # Build UTM parameters display
                             param_display = []
-                            params_str = ''
-                            for param, value in crf_utm_params_dict.items():
-                                if param in redirected_utm_params_dict and redirected_utm_params_dict[param] == value:
-                                    param_display.append(f'<span style="color:green;">{param}={value}</span>')
+                            for param, crf_value in crf_utm_params_dict.items():
+                                redirected_value = redirected_utm_params_dict.get(param, None)
+                                if redirected_value and crf_value == redirected_value:
+                                    param_display.append(f'<span style="color:green;">{param}={crf_value}</span>')  # Match
                                 else:
-                                    param_display.append(f'<span style="color:red;">{param}={value}</span>')
+                                    param_display.append(f'<span style="color:red;">{param}={crf_value}</span>')  # Mismatch or missing
 
                             if crf_utm_params_dict:
                                 params_str = f'?{"&".join(param_display)}'
-
-                            colored_url += params_str
+                                colored_url += params_str
 
                             # Platform Appended Values 
                             extra_params = {param: redirected_query_params[param][0] for param in redirected_query_params if param not in crf_utm_params_dict}
@@ -114,7 +113,7 @@ def upload_and_compare(request):
                                 extra_str = '&'.join([f'{param}={value}' for param, value in extra_params.items()])
                                 colored_url += f'<span style="color:lightblue;">&{extra_str}</span>'
 
-                            # Add the FontAwesome icon for target blank
+                      
                             target_blank_icon = '<i class="fas fa-external-link-alt icon icon-green"></i>' if final_url_target_blank else ''
 
                             results.append({
