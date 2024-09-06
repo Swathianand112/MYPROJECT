@@ -44,9 +44,12 @@
             display: block;
             margin-bottom: 15px;
             width: 100%;
+            padding: 8px;
+            border: 1px solid #ced4da;
+            border-radius: 4px;
         }
         button {
-            background-color: #007bff;
+            background-color: #28a745;
             color: white;
             border: none;
             padding: 10px 20px;
@@ -56,7 +59,7 @@
             transition: background-color 0.3s;
         }
         button:hover {
-            background-color: #0056b3;
+            background-color: #218838;
         }
         table {
             width: 100%;
@@ -70,6 +73,7 @@
         th, td {
             padding: 12px;
             text-align: left;
+            word-wrap: break-word;
         }
         th {
             background-color: #343a40;
@@ -94,15 +98,20 @@
             height: auto;
         }
         td.url-cell {
-            width: 70%; /* URL takes 70% of the table width */
-            word-wrap: break-word; /* Breaks long URLs into multiple lines */
+            word-break: break-all; /* Ensures long URLs break into multiple lines */
         }
         td.content-cell {
-            width: 15%; /* Content takes 15% of the table width */
+            width: 15%; /* Reduced width for content */
         }
         td.title-cell {
-            width: 15%; /* Title Match takes 15% of the table width */
+            width: 10%; /* Title Match takes 15% of the table width */
             text-align: center; /* Center the icons */
+        }
+        td.url-cell {
+            width: 75%; /* Increased width for URL */
+        }
+        .form-group {
+            margin-bottom: 15px;
         }
     </style>
 </head>
@@ -113,17 +122,25 @@
     <div class="container">
         <form method="post" enctype="multipart/form-data">
             {% csrf_token %}
-            <label for="crf_file">Upload CRF File (CSV):</label>
-            <input type="file" id="crf_file" name="crf_file">
+            <div class="form-group">
+                <label for="crf_file">Upload CRF File (CSV):</label>
+                <input type="file" id="crf_file" name="crf_file">
+            </div>
             
-            <label for="crf_url">Or enter CRF File URL:</label>
-            <input type="text" id="crf_url" name="crf_url" placeholder="Enter CRF file URL">
+            <div class="form-group">
+                <label for="crf_url">Or enter CRF File URL:</label>
+                <input type="text" id="crf_url" name="crf_url" placeholder="Enter CRF file URL">
+            </div>
 
-            <label for="email_file">Upload Email File (HTML):</label>
-            <input type="file" id="email_file" name="email_file">
+            <div class="form-group">
+                <label for="email_file">Upload Email File (HTML):</label>
+                <input type="file" id="email_file" name="email_file">
+            </div>
             
-            <label for="email_url">Or enter Email File URL:</label>
-            <input type="text" id="email_url" name="email_url" placeholder="Enter Email file URL">
+            <div class="form-group">
+                <label for="email_url">Or enter Email File URL:</label>
+                <input type="text" id="email_url" name="email_url" placeholder="Enter Email file URL">
+            </div>
             
             <button type="submit">Upload and Compare</button>
         </form>

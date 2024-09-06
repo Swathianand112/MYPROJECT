@@ -41,13 +41,10 @@ def upload_and_compare(request):
                     
                     # Extract content based on tag type
                     if a_tag.find('img'):
-                        # Extract image URL for logos
                         email_contents[target_id] = f'<img src="{a_tag.find("img").get("src")}" alt="Logo" class="content-img">'
                     elif a_tag.get_text(strip=True):
-                        # Extract text for CTA or other content
                         email_contents[target_id] = a_tag.get_text(strip=True)
                     else:
-                        # Default content (if any)
                         email_contents[target_id] = title or 'No content'
 
                 results = []
@@ -56,17 +53,17 @@ def upload_and_compare(request):
                 for _, row in crf_data.iterrows():
                     target_id = row.get('Target_id', '')
                     final_url = row.get('Final_URL', '')
-                    crf_title = row.get('Title', '').strip().lower() if 'Title' in row else '' 
-                    crf_utm_params = row.get('UTM_Parameters', '') 
+                    crf_title = row.get('Title', '').strip().lower() if 'Title' in row else ''
+                    crf_utm_params = row.get('UTM_Parameters', '')
                     email_info = email_urls.get(target_id, {})
                     email_url = email_info.get('url', '')
                     email_title = email_info.get('title', '')
                     email_content = email_contents.get(target_id, '')
                     final_url_target_blank = email_info.get('target_blank', False)
-                    title_match_icon = 'times' 
+                    title_match_icon = 'times'
 
                     if crf_title and crf_title == email_title:
-                        title_match_icon = 'check' 
+                        title_match_icon = 'check'
 
                     if email_url:
                         try:
@@ -84,7 +81,7 @@ def upload_and_compare(request):
                             root_final_url = f'{parsed_final_url.scheme}://{parsed_final_url.netloc}'
                             root_redirected_url = f'{parsed_redirected_url.scheme}://{parsed_redirected_url.netloc}'
 
-                            
+                            # Color the root URL
                             colored_url = f'<span style="color:{"green" if root_final_url == root_redirected_url else "red"};">{root_redirected_url}</span>'
 
                             # Extract and Compare UTM Parameters
@@ -99,21 +96,20 @@ def upload_and_compare(request):
                             for param, crf_value in crf_utm_params_dict.items():
                                 redirected_value = redirected_utm_params_dict.get(param, None)
                                 if redirected_value and crf_value == redirected_value:
-                                    param_display.append(f'<span style="color:green;">{param}={crf_value}</span>')  # Match
+                                    param_display.append(f'<span style="color:green;">{param}=<span style="color:lightgreen;">{crf_value}</span></span>')
                                 else:
-                                    param_display.append(f'<span style="color:red;">{param}={crf_value}</span>')  # Mismatch or missing
+                                    param_display.append(f'<span style="color:red;">{param}=<span style="color:lightred;">{crf_value}</span></span>')
 
                             if crf_utm_params_dict:
                                 params_str = f'?{"&".join(param_display)}'
                                 colored_url += params_str
 
-                            # Platform Appended Values 
+                            # Platform Appended Values
                             extra_params = {param: redirected_query_params[param][0] for param in redirected_query_params if param not in crf_utm_params_dict}
                             if extra_params:
                                 extra_str = '&'.join([f'{param}={value}' for param, value in extra_params.items()])
                                 colored_url += f'<span style="color:lightblue;">&{extra_str}</span>'
 
-                      
                             target_blank_icon = '<i class="fas fa-external-link-alt icon icon-green"></i>' if final_url_target_blank else ''
 
                             results.append({
